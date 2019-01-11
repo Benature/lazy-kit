@@ -1,4 +1,4 @@
-# MuyiWorkshop
-Do everything I wanna do.  
+# iLazy
 
-**Coding is my world!**
+
+**I am LAZY!**

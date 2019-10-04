@@ -2,4 +2,9 @@
 
 一个偷懒工具包
 
-> 如果觉得有帮助就点个star呗
+> 如果觉得有帮助就点个**star**呗
+
+## 偷懒目录
+
+- [课件名序号要求在文件名开头-lecture_rename](./lecture_rename)
+- [课件网盘地址我懒得记-url_jump](./url_jump)

@@ -18,4 +18,5 @@
 
 这行里面的`https://pan.baidu.com/s/url/of/your/lecture`改成对应的网盘链接(不一定是百度网盘), 保存文件.
 
-> 如果觉得有帮助就点个**star**呗
+<div class="note info no-icon"><p>如果觉得有帮助就点个**star**呗</p></div>
+<!-- > 如果觉得有帮助就点个**star**呗 -->

@@ -15,7 +15,7 @@ for fn in filenames:
     if fn_split[-1] not in ["pptx", "pdf"]:
         continue
     # 防止重复改名
-    if len(re.findall(r"\d.p", fn_split[-2])) == 0:
+    if len(re.findall(r"\d.p", fn)) == 0:
         continue
 
     # 提取序号

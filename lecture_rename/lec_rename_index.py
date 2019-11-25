@@ -1,6 +1,10 @@
-# lec_rename.py
+# lec_rename_index.py
 # Date: 2019.09.26
 # Author: Benature
+
+'''
+提取序号放到最前->排序
+'''
 
 import os
 import re
@@ -19,7 +23,7 @@ for fn in filenames:
         continue
 
     # 提取序号
-    ind = re.findall(r"\d", fn) 
+    ind = re.findall(r"\d", fn)
     ind = ".".join(ind)
 
     # 跳过无数字的文件
@@ -31,7 +35,7 @@ for fn in filenames:
     # 补全第一章序号
     if len(ind) == 1:
         ind = "1." + ind
-   
+
     # 拼接新文件名
     new_fn = ind + "_" + new_fn
 

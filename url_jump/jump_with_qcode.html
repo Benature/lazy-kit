@@ -1,0 +1,42 @@
+<html>
+
+<head>
+    <title>课程名/跳转中...</title>
+</head>
+
+<script type="text/javascript">
+    // ======================= 配置 =========================
+    var password = 'abdc' // 验证码
+    var url_pan = 'https://pan.baidu.com/s/wangpanlianjie'; // 网盘链接
+    // ======================================================
+    function copyText() {
+        var input = document.getElementById("input");
+        input.value = password; // 修改文本框的内容
+        input.select(); // 选中文本
+        if (document.execCommand('copy')) {
+            console.log('复制成功');
+            input.value = "复制成功，正在跳转...🚀";
+            document.getElementsByClassName("click").value = "正在跳转到网盘🚀"
+            document.location = url_pan;
+        } else {
+            console.log('复制失败');
+        }
+
+    }
+</script>
+
+<style>
+    .click {
+        width: 100%;
+        height: 100%;
+        font-size: 500%;
+    }
+</style>
+
+<body>
+    <textarea id="input">点点下面👇</textarea>
+    <br></br>
+    <button onclick="copyText()" class="click">点我走起</button>
+</body>
+
+</html>

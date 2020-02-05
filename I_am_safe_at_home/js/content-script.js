@@ -2,6 +2,7 @@ console.log('武汉加油')
 
 chrome.extension.onMessage.addListener(function (request, sender, sendMessage) {
     if (request.wjx == "fillIt") {
+        var config = request.data;
         let fields = document.getElementsByClassName('field');
         for (let i = 0; i < fields.length; i++) {
             let label = fields[i].getElementsByClassName('field-label')[0].innerText;

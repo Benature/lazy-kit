@@ -30,7 +30,13 @@ chrome.extension.onMessage.addListener(function (request, sender, sendMessage) {
         }
         console.log('武汉加油 ヾ(◍°∇°◍)ﾉﾞ')
         sendMessage({ status: 'done' });
+    } else if (request.mwg == "jump2github") {
+        let url = 'https://github.com/Benature/lazy-kit/tree/master/I_am_safe_at_home';
+        console.log(url)
+        window.location.href = url
+        sendMessage({ status: 'done' });
     }
-    else
+    else {
         sendMessage("failed");
+    }
 });

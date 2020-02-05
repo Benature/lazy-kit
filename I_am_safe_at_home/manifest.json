@@ -1,6 +1,6 @@
 {
   "name": "I am Safe at Home",
-  "version": "1.0",
+  "version": "0.1.2",
   "description": "在家自动填写问卷星向学校报平安",
   "permissions": [
     "activeTab",
@@ -11,6 +11,9 @@
   "background": {
     "scripts": [
       "js/background.js"
+    ],
+    "css": [
+      "css/base.css"
     ],
     "persistent": false
   },

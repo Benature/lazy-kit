@@ -6,5 +6,6 @@
 
 ## 偷懒目录
 
+- [Chrome 插件：我在家里很安全](./I_am_safe_at_home)
 - [课件名序号要求在文件名开头-lecture_rename](./lecture_rename)
 - [课件网盘地址我懒得记-url_jump](./url_jump)

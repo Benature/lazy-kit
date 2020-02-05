@@ -1,0 +1,45 @@
+{
+  "name": "I am Safe at Home",
+  "version": "1.0",
+  "description": "在家自动填写问卷星向学校报平安",
+  "permissions": [
+    "activeTab",
+    "declarativeContent",
+    "storage",
+    "tabs"
+  ],
+  "background": {
+    "scripts": [
+      "js/background.js"
+    ],
+    "persistent": false
+  },
+  "page_action": {
+    "default_icon": "images/muyi.png",
+    "default_title": "我在家里很安全",
+    "default_popup": "popup.html",
+    "permissions": [
+      "declarativeContent"
+    ]
+  },
+  "icons": {
+    "16": "images/muyi.png",
+    "32": "images/muyi.png",
+    "48": "images/muyi.png",
+    "128": "images/muyi.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://www.wjx.cn/*"
+      ],
+      "js": [
+        "js/content-script.js",
+        "config.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "options_page": "options.html",
+  "manifest_version": 2
+}

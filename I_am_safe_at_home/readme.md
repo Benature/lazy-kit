@@ -4,7 +4,7 @@ Chrome 浏览器插件
 
 自动填写问卷星问卷，向学校报平安。
 
-<p align="center">效果👇</p>
+<!-- <p align="center">效果👇</p>
 
 <p align="center">
   <img src="./doc/fillForm.gif" width="50%"/>
@@ -14,7 +14,7 @@ Chrome 浏览器插件
 
 <p align="center">
   <img src="./doc/config.png" alt="config" width="60%"/>
-</p>
+</p> -->
 
 ## Install & Config 安装与配置
 

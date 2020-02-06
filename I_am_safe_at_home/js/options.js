@@ -15,16 +15,16 @@ var config_default = [
         label: '年级、班级',
         content: '2017级‐2班'
     },
-    {
-        type: 'select',
-        label: '有无异样',
-        content: '无'
-    },
-    {
-        type: 'select',
-        label: '居住地',
-        content: '家'
-    },
+    // {
+    //     type: 'select',
+    //     label: '有无异样',
+    //     content: '无'
+    // },
+    // {
+    //     type: 'select',
+    //     label: '居住地',
+    //     content: '家'
+    // },
 ];
 
 // Saves options to chrome.storage

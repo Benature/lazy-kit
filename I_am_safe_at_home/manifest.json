@@ -1,7 +1,7 @@
 {
   "name": "I am Safe at Home",
   "version": "0.1.2",
-  "description": "在家自动填写问卷星向学校报平安",
+  "description": "在家自动填写问卷星内的基本信息，向学校报平安",
   "permissions": [
     "activeTab",
     "declarativeContent",

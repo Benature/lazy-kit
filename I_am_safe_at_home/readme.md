@@ -1,6 +1,18 @@
 # I am Safe at Home 我在家里很安全
 
-browser: Chrome
+Chrome 浏览器插件
+
+自动填写问卷星问卷，向学校报平安。
+
+<center>效果👇</center>
+<center>
+<img src="./doc/fillForm.gif" width="50%"></img>
+</center>
+
+<center>配置👇</center>
+<center>
+<img src="./doc/config.png" width="60%"></img>
+</center>
 
 ## Install & Config 安装与配置
 

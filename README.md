@@ -9,3 +9,6 @@
 - [Chrome 插件：我在家里很安全--I_am_safe_at_home](./I_am_safe_at_home)
 - [课件名序号要求在文件名开头--lecture_rename](./lecture_rename)
 - [课件网盘地址我懒得记--url_jump](./url_jump)
+- [其他](./other)
+  - [16进制转2进制——计算误码率](./other/hex2bin.py)
+  - [考满分万能句型练习数据爬取](./other/KMF_write_sentence.ipynb)

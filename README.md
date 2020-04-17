@@ -11,6 +11,7 @@
 - [课件网盘地址我懒得记--url_jump](./url_jump)
 - [其他](./other)
   - [16进制转2进制——计算误码率](./other/hex2bin.py)
+  - [姓名按拼音加密](./other/encrypt_name.py)
 - [爬虫](./spider)
   - [考满分万能句型练习数据爬取](./spider/KMF_write_sentence.ipynb)
   - [慕课课件下载](./spider/慕课课件下载.ipynb)

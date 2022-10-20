@@ -15,3 +15,8 @@
 - [爬虫](./spider)
   - [考满分万能句型练习数据爬取](./spider/KMF_write_sentence.ipynb)
   - [慕课课件下载](./spider/慕课课件下载.ipynb)
+
+### 其他偷懒
+- [AutoLaTeX](https://github.com/Benature/AutoLaTeX): 从 Excel 到 LaTeX 表格
+- [pdf helper](https://github.com/Benature/pdf-helper): 各种 pdf 花活操作
+- [bib Catcher](https://github.com/Benature/bib-catcher): 批量下载所有文末引用文献的 bibtex

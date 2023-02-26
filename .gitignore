@@ -1,2 +1,4 @@
 **/.DS_Store
 *.zip
+**/out/*
+!**/out/.gitkeep

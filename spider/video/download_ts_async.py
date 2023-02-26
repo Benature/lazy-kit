@@ -14,6 +14,7 @@ async def fetch(client, url, folder):
     async with client.get(url) as resp:
         assert resp.status == 200
         content = await resp.read()
+        # content = await resp.text()
         with open(file_path, 'bw') as f:
             f.write(content)
         print("", ts_name, end="|")

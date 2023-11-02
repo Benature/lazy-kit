@@ -12,27 +12,41 @@ def secToTimecode(t):
     h, m = divmod(m, 60)
     return "%02d:%02d:%02d,%03d" % (h, m, s, ms)
 
+username = getpass.getuser()
+draft_dir_dict = {
+    'Windows':
+    rf'C:\Users\{username}\AppData\Local\JianyingPro\User Data\Projects\com.lveditor.draft',
+    'Darwin':
+    f'/Users/{username}/Movies/JianyingPro/User Data/Projects/com.lveditor.draft',
+}
+draft_json_fn = {
+    'Windows': 'draft_content.json',
+    'Darwin': 'draft_info.json',
+}[platform.system()]
+
 
 def get_project():
-
-    username = getpass.getuser()
-    draft_dir_dict = {
-        'Windows':
-        rf'C:\Users\{username}\AppData\Local\JianyingPro\User Data\Projects\com.lveditor.draft',
-        'Darwin':
-        f'/Users/{username}/Movies/JianyingPro/User Data/Projects/com.lveditor.draft',
-    }
-
-    draft_dir = draft_dir_dict[platform.system()]
+    fast_config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.fast_JY.ignore')
+    if os.path.exists(fast_config_path):
+        with open(fast_config_path, 'r') as f:
+            config_content = f.read()
+            draft_dir_re_finds = re.findall(r"draft_dir=(.*)", config_content)
+        if len(draft_dir_re_finds) == 0:
+            draft_dir = draft_dir_dict[platform.system()]
+        else:
+            draft_dir = draft_dir_re_finds[0].strip()
+            print("config set path as:", draft_dir)
+            
+    else:
+        draft_dir = draft_dir_dict[platform.system()]
 
     projects = sorted(
         [dd for dd in os.listdir(draft_dir) if not dd.endswith('.json')],
         key=lambda x: os.path.getmtime(os.path.join(draft_dir, x)),
         reverse=True)
 
-    if os.path.exists(
-            os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                         '.fast_JY.ignore')) == False:
+    
+    if os.path.exists(fast_config_path) == False:
         # a self added file, to fast up project selection (default the latest one)
         print(r'''draft_info.json
 - Windows: C:\Users\Admin\AppData\Local\JianyingPro\User Data\Projects\com.lveditor.draft
@@ -47,9 +61,9 @@ def get_project():
         json_path = ""
     json_path = os.path.join(
         draft_dir, projects[0],
-        "draft_info.json") if json_path.strip() == "" else json_path
+        draft_json_fn) if json_path.strip() == "" else json_path
     print(json_path)
-    with open(json_path, "r") as f:
+    with open(json_path, "r", encoding="utf8") as f:
         data = json.load(f)
     return data
 
@@ -101,7 +115,7 @@ try:
             sys.exit()
     print("File name:", os.path.basename(srt_path))
 
-    with open(srt_path, "w") as f:
+    with open(srt_path, "w", encoding="utf8") as f:
         f.write(srt_content)
     video_folder = os.path.dirname(video_path)
     txt_dir = os.path.join(video_folder, "txt")

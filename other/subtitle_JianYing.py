@@ -1,6 +1,7 @@
 import json
 import re
 import os
+import sys
 import platform
 import getpass
 
@@ -32,6 +33,7 @@ def get_project():
     if os.path.exists(
             os.path.join(os.path.dirname(os.path.abspath(__file__)),
                          '.fast_JY.ignore')) == False:
+        # a self added file, to fast up project selection (default the latest one)
         print(r'''draft_info.json
 - Windows: C:\Users\Admin\AppData\Local\JianyingPro\User Data\Projects\com.lveditor.draft
 - Android: /data/data/com.lemon.lv/files/newdrafts/
@@ -41,7 +43,7 @@ def get_project():
         json_path = input(
             f"`draft_info.json` path of JianYing: (default: {projects[0]})\n")
     else:
-        print(projects[0])
+        print("Retrieve data from", projects[0])
         json_path = ""
     json_path = os.path.join(
         draft_dir, projects[0],
@@ -82,11 +84,24 @@ for track in data['tracks']:
         raw_content += f'{content}\n'
         srt_index += 1
 
+if len(contents) == 0:
+    print("No subtitle found")
+    sys.exit()
+
 try:
     video = data['materials']['videos'][0]
     video_path = video['path']
 
-    with open(os.path.splitext(video_path)[0] + ".srt", "w") as f:
+    srt_path = os.path.splitext(video_path)[0] + ".srt"
+    print("Output path:", srt_path)
+    if os.path.exists(srt_path):
+        cmd_tmp = input(
+            "File already exists. Enter to go on... (`q` to quit) ")
+        if cmd_tmp.strip().lower() == "q":
+            sys.exit()
+    print("File name:", os.path.basename(srt_path))
+
+    with open(srt_path, "w") as f:
         f.write(srt_content)
     video_folder = os.path.dirname(video_path)
     txt_dir = os.path.join(video_folder, "txt")

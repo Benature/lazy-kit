@@ -1,7 +1,6 @@
 import json
 import re
 import os
-import sys
 import platform
 import getpass
 
@@ -68,14 +67,35 @@ def get_project():
     return data
 
 
+class VIDEO_INFO:
+    def __init__(self, path, duration):
+        self.path = path
+        self.duration = int(duration)
+        
+        self.srt_content = ""
+        self.raw_content = ""
+        self.contents = []
+        
+
+def analysis_videos(data):
+    video_infos = []
+    for video in data['materials']['videos']:
+        if len(video_infos) > 0 and video_infos[-1].path==video['path']:
+            video_infos[-1].duration += int(video['duration'])
+        else:
+            video_infos.append(VIDEO_INFO(video['path'], video['duration']))
+    return video_infos
+    
+
 data = get_project()
 
+video_infos = analysis_videos(data)
 text_list = data['materials']['texts']
 texts_dict = {t['id']: t for t in text_list}
 
-srt_index = 1
-srt_content, raw_content = "", ""
-contents = []
+video_idx = 0
+prev_video_duration = 0
+
 for track in data['tracks']:
     for segment in track['segments']:
         text_id = segment['material_id']
@@ -84,54 +104,62 @@ for track in data['tracks']:
             continue
 
         timerange = segment['target_timerange']
+        current_t = int(timerange["start"])
+        
+        if current_t > video_infos[video_idx].duration:
+            video_idx += 1
+            prev_video_duration += video_infos[video_idx-1].duration
+
         content = texts_dict[text_id]['content']
         content = re.sub(r"</?(?:font|color|size).*?>", "",
                          content).strip("[]")
 
-        contents.append(content)
+        video_infos[video_idx].contents.append(content)
 
-        startTime = secToTimecode(int(timerange["start"]) / 1000)
-        endTime = secToTimecode(
-            (int(timerange["start"]) + int(timerange["duration"])) / 1000)
+        startTime = secToTimecode((current_t - prev_video_duration) / 1000)
+        endTime = secToTimecode((current_t + int(timerange["duration"]) - prev_video_duration) / 1000)
 
-        srt_content += f'{srt_index}\n{startTime} --> {endTime}\n{content}\n\n'
-        raw_content += f'{content}\n'
-        srt_index += 1
+        srt_index = len(video_infos[video_idx].contents)
+        video_infos[video_idx].srt_content += f'{srt_index}\n{startTime} --> {endTime}\n{content}\n\n'
+        video_infos[video_idx].raw_content += f'{content}\n'
 
-if len(contents) == 0:
-    print("No subtitle found")
-    sys.exit()
+for video_info in video_infos:
+    contents = video_info.contents
+    srt_content = video_info.srt_content
+    
+    if len(contents) == 0:
+        print("No subtitle found")
+        continue
 
-try:
-    video = data['materials']['videos'][0]
-    video_path = video['path']
+    try:
+        video_path = video_info.path
 
-    srt_path = os.path.splitext(video_path)[0] + ".srt"
-    print("Output path:", srt_path)
-    if os.path.exists(srt_path):
-        cmd_tmp = input(
-            "File already exists. Enter to go on... (`q` to quit) ")
-        if cmd_tmp.strip().lower() == "q":
-            sys.exit()
-    print("File name:", os.path.basename(srt_path))
+        srt_path = os.path.splitext(video_path)[0] + ".srt"
+        print("Output path:", srt_path)
+        if os.path.exists(srt_path):
+            cmd_tmp = input(
+                "File already exists. Enter to go on... (`q` to quit) ")
+            if cmd_tmp.strip().lower() == "q":
+                continue
+        print("File name:", os.path.basename(srt_path))
 
-    with open(srt_path, "w", encoding="utf8") as f:
-        f.write(srt_content)
-    video_folder = os.path.dirname(video_path)
-    txt_dir = os.path.join(video_folder, "txt")
-    if not os.path.exists(txt_dir):
-        os.makedirs(txt_dir)
-    with open(
-            os.path.join(
-                txt_dir,
-                os.path.basename(os.path.splitext(video_path)[0]) + '.txt'),
-            "w") as f:
-        f.write("\n".join(contents))
+        with open(srt_path, "w", encoding="utf8") as f:
+            f.write(srt_content)
+        video_folder = os.path.dirname(video_path)
+        txt_dir = os.path.join(video_folder, "txt")
+        if not os.path.exists(txt_dir): # touch txt folder
+            os.makedirs(txt_dir)
+        with open(
+                os.path.join(
+                    txt_dir,
+                    os.path.basename(os.path.splitext(video_path)[0]) + '.txt'),
+                "w") as f:
+            f.write("\n".join(contents))
 
-except Exception as e:
-    print(e)
-    with open(f"out/subtitle.srt", "w") as f:
-        f.write(srt_content)
+    except Exception as e:
+        print(e)
+        with open(f"out/subtitle.srt", "w") as f:
+            f.write(srt_content)
 
-    with open(f"out/subtitle.txt", "w") as f:
-        f.write("\n".join(contents))
+        with open(f"out/subtitle.txt", "w") as f:
+            f.write("\n".join(contents))

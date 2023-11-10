@@ -81,6 +81,7 @@ def analysis_videos(data):
     video_infos = []
     for video in data['materials']['videos']:
         if len(video_infos) > 0 and video_infos[-1].path==video['path']:
+            # merge for same file
             video_infos[-1].duration += int(video['duration'])
         else:
             video_infos.append(VIDEO_INFO(video['path'], video['duration']))

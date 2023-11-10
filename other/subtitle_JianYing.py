@@ -106,9 +106,10 @@ for track in data['tracks']:
         timerange = segment['target_timerange']
         current_t = int(timerange["start"])
         
-        if current_t > video_infos[video_idx].duration:
+        if current_t > prev_video_duration + video_infos[video_idx].duration:
             video_idx += 1
             prev_video_duration += video_infos[video_idx-1].duration
+            # print(video_idx, current_t, video_infos[video_idx-1].duration)
 
         content = texts_dict[text_id]['content']
         content = re.sub(r"</?(?:font|color|size).*?>", "",
@@ -153,13 +154,13 @@ for video_info in video_infos:
                 os.path.join(
                     txt_dir,
                     os.path.basename(os.path.splitext(video_path)[0]) + '.txt'),
-                "w") as f:
+                "w", encoding="utf8") as f:
             f.write("\n".join(contents))
 
     except Exception as e:
         print(e)
-        with open(f"out/subtitle.srt", "w") as f:
+        with open(f"out/subtitle.srt", "w", encoding="utf8") as f:
             f.write(srt_content)
 
-        with open(f"out/subtitle.txt", "w") as f:
+        with open(f"out/subtitle.txt", "w", encoding="utf8") as f:
             f.write("\n".join(contents))

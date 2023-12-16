@@ -1,9 +1,21 @@
+"""
+author: Benature
+
+同级目录下创建 `.fast_JY.ignore` 文件，则自动处理最新的视频项目。
+
+如果剪映的安装路径没有使用默认的，可以在 `.fast_JY.ignore` 文件中写明：
+```txt
+draft_dir=/custom/path/of/JianYing/draft/
+```
+"""
+
 import json
 import re
 import os
 import platform
 import getpass
 from pathlib import Path
+import time
 
 
 def secToTimecode(t):
@@ -14,23 +26,40 @@ def secToTimecode(t):
     return "%02d:%02d:%02d,%03d" % (h, m, s, ms)
 
 
-username = getpass.getuser()
-draft_dir_dict = {
-    'Windows':
-    rf'C:\Users\{username}\AppData\Local\JianyingPro\User Data\Projects\com.lveditor.draft',
-    'Darwin':
-    f'/Users/{username}/Movies/JianyingPro/User Data/Projects/com.lveditor.draft',
-}
-draft_json_fn = {
-    'Windows': 'draft_content.json',
-    'Darwin': 'draft_info.json',
-}[platform.system()]
+def check_running(config_dir):
+    """检查「识别字幕」是否仍在进行"""
+    config_dir = Path(config_dir)
+    backup_path = config_dir.parent / ".backup"
+    root_dir = config_dir.parent.parent.parent.parent
+    recognize_path = root_dir / "Cache/recognize"
+
+    print("Checking JianYing is running?", end='')
+    while True:
+        if os.stat(recognize_path).st_mtime > os.stat(backup_path).st_mtime:
+            # ".backup" is not updated yet, wait
+            print(end='.', flush=True)
+            time.sleep(60 * 5)  # 5分钟，单位为秒
+            continue
+        print(" Oh! It's done!")
+        break
 
 
 def get_project():
     """找到剪映视频项目的草稿目录"""
+    username = getpass.getuser()
+    draft_dir_dict = {
+        'Windows':
+        rf'C:\Users\{username}\AppData\Local\JianyingPro\User Data\Projects\com.lveditor.draft',
+        'Darwin':
+        f'/Users/{username}/Movies/JianyingPro/User Data/Projects/com.lveditor.draft',
+    }
+    draft_json_fn = {
+        'Windows': 'draft_content.json',
+        'Darwin': 'draft_info.json',
+    }[platform.system()]
+
     fast_config_path = Path(__file__).resolve().parent / '.fast_JY.ignore'
-    if os.path.exists(fast_config_path):
+    if fast_config_path.exists():
         with open(fast_config_path, 'r') as f:
             config_content = f.read()
             draft_dir_re_finds = re.findall(r"draft_dir=(.*)", config_content)
@@ -52,7 +81,7 @@ def get_project():
         key=lambda x: os.path.getmtime(os.path.join(draft_dir, x)),
         reverse=True)
 
-    if os.path.exists(fast_config_path) == False:
+    if not fast_config_path.exists():
         # a self added file, to fast up project selection (default the latest one)
         print(rf'''draft_info.json
 - Windows: C:\Users\{username}\AppData\Local\JianyingPro\User Data\Projects\com.lveditor.draft
@@ -68,6 +97,7 @@ def get_project():
     json_path = Path(draft_dir, projects[0],
                      draft_json_fn) if json_path.strip() == "" else json_path
     print(str(json_path))
+    check_running(json_path)
     with open(json_path, "r", encoding="utf8") as f:
         data = json.load(f)
     return data
